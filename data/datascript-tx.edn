@@ -1,0 +1,25 @@
+;; data/datascript-tx.edn — DataScript tx-data derived from src/association/facts.cljc
+;; `association.facts/catalog` (ADR-2607141700 Wave 0). Same shape as sibling files.
+
+[#:association-rule{:id "confindustria.founding-1910-turin"
+                     :title "'Confederazione italiana dell'industria' (Confindustria's founding name) born 5 May 1910, first headquartered in Turin (confindustria.it official 'Storia' page, corroborated by Wikidata Q1125309 inception statement)"
+                     :association "confindustria"
+                     :isic "9411"
+                     :country "ITA"
+                     :kind :governance-program
+                     :url "https://www.confindustria.it/storia/"
+                     :url-provenance :official-confindustria-it
+                     :established-date "1910-05-05"
+                     :retrieved-at "2026-07-17"
+                     :topic [:governance]}
+ #:association-rule{:id "confindustria.hq-moved-rome-1919"
+                     :title "Confindustria's headquarters moved from Turin to Rome in 1919 ('successivamente dal 1919 a Roma') (confindustria.it official 'Storia' page)"
+                     :association "confindustria"
+                     :isic "9411"
+                     :country "ITA"
+                     :kind :governance-program
+                     :url "https://www.confindustria.it/storia/"
+                     :url-provenance :official-confindustria-it
+                     :established-date "1919"
+                     :retrieved-at "2026-07-17"
+                     :topic [:governance]}]
