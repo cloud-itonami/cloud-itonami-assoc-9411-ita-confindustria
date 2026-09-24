@@ -40,11 +40,20 @@ municipality
 ([`cloud-itonami-municipality-ita-roma`](https://github.com/cloud-itonami/cloud-itonami-municipality-ita-roma)),
 and association (this repo).
 
-Both entries here were directly WebFetch-verified against
-`confindustria.it`'s own official "Storia" (History) page, which
-rendered successfully — no fallback needed. The 1910 founding date is
-independently corroborated by Wikidata (Q1125309)'s own "inception"
-statement.
+Every entry cites a page on `confindustria.it` (Storia, Valori e
+Mission, Organi, Regole di sistema, Sistema Confindustria, Piccola
+Industria, Centro Studi, Trasparenza). Each entry carries the verbatim
+Italian span of that page the claim rests on (`:source-quote`), taken
+from the page body rather than the site menu and footer that every page
+repeats. The History page names the first President next to the
+founding date and other pages name office-holders; the quotes stop
+before every name. Figures Confindustria gives about itself (211 member
+organisations on one page, 209 on another; its 2025 surplus) are
+recorded as what Confindustria states, not as independently measured
+facts, and the two membership figures are not reconciled.
+
+The 1910 founding date is independently corroborated by Wikidata
+(Q1125309)'s own "inception" statement.
 
 ## Scope
 
@@ -58,20 +67,34 @@ fabricate one.
 
 ## Data
 
-- `src/association/facts.cljc` — the catalog, source of truth.
-- `schema/association-rule.edn` — DataScript schema.
-- `data/datascript-tx.edn` — derived DataScript tx-data (query this
-  alongside other `cloud-itonami`/`etzhayyim` compliance-fact sources via
+- `data/datascript-tx.edn` — the catalog. Facts are authored here and
+  nowhere else (DataScript tx-data; query it alongside other
+  `cloud-itonami`/`etzhayyim` compliance-fact sources via
   `com-junkawasaki/root`'s `scripts/compliance-fact-query.cljs`).
+- `src/association/facts.kotoba` (Clojure reading) and
+  `src/association_facts.kotoba` (Kotoba port) — both GENERATED from the
+  data file by `scripts/gen-kotoba-port.cljk`. Do not hand-edit.
+- `schema/association-rule.edn` — DataScript schema.
 
-Both entries directly WebFetch-verified against `confindustria.it`'s
-own Storia page: the 5 May 1910 founding of the "Confederazione
-italiana dell'industria" (Confindustria's founding name) in Turin,
-and the 1919 relocation of its headquarters from Turin to Rome.
+```bash
+# 1. edit data/datascript-tx.edn, then regenerate both readings
+kbb --backend sci scripts/gen-kotoba-port.cljk
+kbb --backend sci scripts/gen-kotoba-port.cljk --check   # exit 1 if either reading drifted
+
+# 2. check the catalog against its own sources
+kbb --backend sci scripts/verify-catalog.cljk            # structural, offline
+kbb --backend sci scripts/verify-catalog.cljk --live     # fetch every :url, require every quote
+```
+
+`verify-catalog` exits 0 (checked, nothing wrong), 1 (findings printed)
+or 2 (REFUSED: it could not read the catalog or a source, which is
+neither a pass nor a finding). Dates are checked in the Italian the
+sources write them in (`5 maggio 1910`, `novembre 1943`).
 
 ## License
 
 AGPL-3.0-or-later (matches the `cloud-itonami-iso3166-*` /
 `-municipality-*` / `-assoc-*` / `-lei-*` convention). Policy text
 itself remains Confindustria's; this repo stores only citation
-metadata (id/title/url/dates), not full text.
+metadata (id/title/url/dates) and the short verbatim span each claim rests on,
+not full text.
